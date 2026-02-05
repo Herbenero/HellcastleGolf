@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Hellcastle Golf Tournament</title>
+  <style>
+    :root {
+      --bg: #050308;
+      --panel: #151018;
+      --accent: #ff4b1f;
+      --accent2: #f7b733;
+      --text: #f5f5f5;
+      --muted: #888;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #2b0b19 0, #050308 55%, #000 100%);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 20px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 1100px;
+      background: linear-gradient(145deg, #120b16, #050308);
+      border-radius: 16px;
+      border: 1px solid rgba(255, 75, 31, 0.4);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 75, 31, 0.25);
+      padding: 20px 24px 28px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .app::before {
+      content: "";
+      position: absolute;
+      inset: -40%;
+      background:
+        radial-gradient(circle at 10% 0, rgba(255, 75, 31, 0.12), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(247, 183, 51, 0.12), transparent 55%);
+      opacity: 0.9;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .title-block {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.9rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent2);
+      text-shadow: 0 0 12px rgba(247, 183, 51, 0.7);
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+    }
+
+    .badge {
+      padding: 6px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 75, 31, 0.6);
+      background: radial-gradient(circle at top, rgba(255, 75, 31, 0.35), rgba(0, 0, 0, 0.9));
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent2);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .badge-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(255, 75, 31, 0.9);
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1.4fr);
+      gap: 16px;
+    }
+
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .panel {
+      background: radial-gradient(circle at top left, rgba(255, 75, 31, 0.12), rgba(0, 0, 0, 0.9));
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      padding: 14px 14px 16px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.06), transparent 40%, transparent 60%, rgba(255, 255, 255, 0.03));
+      mix-blend-mode: soft-light;
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .panel-title {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--muted);
+    }
+
+    .panel-title span {
+      color: var(--accent2);
+    }
+
+    .panel-body {
+      position: relative;
+      z-index: 1;
+    }
+
+    .status-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 12px;
+      align-items: center;
+    }
+
+    .status-pill {
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.8rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .status-label {
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-size: 0.7rem;
+    }
+
+    .status-value {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .status-value-strong {
+      color: var(--accent);
+      font-weight: 700;
+    }
+
+    .players-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      max-height: 220px;
+      overflow-y: auto;
+      padding-right: 4px;
+    }
+
+    .player-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) 0.9fr 0.9fr;
+      gap: 6px;
+      align-items: center;
+      padding: 6px 8px;
+      border-radius: 8px;
+      background: rgba(0, 0, 0, 0.55);
+      border: 1px solid transparent;
+      transition: border 0.15s, background 0.15s, transform 0.1s;
+      font-size: 0.85rem;
+    }
+
+    .player-row.active {
+      border-color: rgba(255, 75, 31, 0.9);
+      background: radial-gradient(circle at left, rgba(255, 75, 31, 0.35), rgba(0, 0, 0, 0.9));
+      transform: translateX(1px);
+      box-shadow: 0 0 12px rgba(255, 75, 31, 0.4);
+    }
+
+    .player-name {
+      font-weight: 600;
+    }
+
+    .player-name span {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--muted);
+      margin-left: 4px;
+    }
+
+    .player-total {
+      text-align: right;
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .player-position {
+      text-align: right;
+      color: var(--muted);
+      font-size: 0.75rem;
+    }
+
+    .add-player-row {
+      display: flex;
+      gap: 6px;
+      margin-top: 10px;
+    }
+
+    input[type="text"] {
+      flex: 1;
+      padding: 7px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: rgba(0, 0, 0, 0.7);
+      color: var(--text);
+      font-size: 0.85rem;
+      outline: none;
+    }
+
+    input[type="text"]::placeholder {
+      color: var(--muted);
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: radial-gradient(circle at top, rgba(255, 75, 31, 0.9), rgba(255, 75, 31, 0.6));
+      color: #fff;
+      padding: 7px 12px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      background: rgba(0, 0, 0, 0.7);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: var(--muted);
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: default;
+      box-shadow: none;
+      transform: none;
+    }
+
+    button:not(:disabled):hover {
+      box-shadow: 0 0 12px rgba(255, 75, 31, 0.7);
+      transform: translateY(-1px);
+    }
+
+    button:not(:disabled):active {
+      transform: translateY(0);
+      box-shadow: 0 0 4px rgba(255, 75, 31, 0.6);
+    }
+
+    .score-buttons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+      margin-bottom: 10px;
+    }
+
+    .score-buttons-grid button {
+      width: 100%;
+      justify-content: space-between;
+    }
+
+    .score-label {
+      font-size: 0.8rem;
+    }
+
+    .score-points {
+      font-size: 0.8rem;
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .score-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 8px;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .score-meta-row strong {
+      color: var(--accent2);
+    }
+
+    .bag-counter {
+      font-size: 0.85rem;
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .controls-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .controls-row button {
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .scorecard-table-wrapper {
+      max-height: 260px;
+      overflow: auto;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.8rem;
+    }
+
+    thead {
+      position: sticky;
+      top: 0;
+      background: rgba(10, 8, 12, 0.96);
+      backdrop-filter: blur(6px);
+      z-index: 1;
+    }
+
+    th,
+    td {
+      padding: 6px 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      white-space: nowrap;
+    }
+
+    th {
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    tbody tr:nth-child(even) {
+      background: rgba(255, 255, 255, 0.02);
+    }
+
+    tbody tr.highlight {
+      background: rgba(255, 75, 31, 0.18);
+    }
+
+    td.player-cell {
+      text-align: left;
+      font-weight: 600;
+    }
+
+    td.total-cell {
+      color: var(--accent2);
+      font-weight: 600;
+    }
+
+    .footer-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 10px;
+      font-size: 0.75rem;
+      color: var(--muted);
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .winner-banner {
+      margin-top: 8px;
+      padding: 8px 10px;
+      border-radius: 999px;
+      background: radial-gradient(circle at left, rgba(247, 183, 51, 0.4), rgba(0, 0, 0, 0.9));
+      border: 1px solid rgba(247, 183, 51, 0.8);
+      font-size: 0.8rem;
+      display: none;
+      align-items: center;
+      gap: 8px;
+      color: #1b1205;
+    }
+
+    .winner-banner span {
+      font-weight: 700;
+    }
+
+    .winner-banner.show {
+      display: inline-flex;
+    }
+
+    .winner-crown {
+      font-size: 1rem;
+    }
+
+    .next-hole-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.4s ease-out;
+      z-index: 20;
+    }
+
+    .next-hole-overlay.show {
+      opacity: 1;
+    }
+
+    .next-hole-banner {
+      padding: 18px 26px;
+      border-radius: 999px;
+      background: radial-gradient(circle at top, rgba(255, 75, 31, 0.95), rgba(0, 0, 0, 0.95));
+      border: 2px solid rgba(247, 183, 51, 0.9);
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 0.22em;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 0 30px rgba(255, 75, 31, 0.9);
+      animation: pulseGlow 0.9s ease-out forwards, floatUp 0.9s ease-out forwards;
+    }
+
+    .next-hole-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #fff;
+      box-shadow: 0 0 16px rgba(255, 255, 255, 0.9);
+    }
+
+    @keyframes pulseGlow {
+      0% {
+        transform: scale(0.7);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.05);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes floatUp {
+      0% {
+        transform: translateY(12px);
+      }
+      100% {
+        transform: translateY(0);
+      }
+    }
+
+    .hellcastle-footer {
+      margin-top: 10px;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--muted);
+      text-align: right;
+    }
+
+    .hellcastle-footer span {
+      color: var(--accent);
+    }
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="next-hole-overlay" id="nextHoleOverlay">
+      <div class="next-hole-banner">
+        <div class="next-hole-dot"></div>
+        Next Hole Awaits in Hellcastle
+        <div class="next-hole-dot"></div>
+      </div>
+    </div>
+
+    <header>
+      <div class="title-block">
+        <h1>Hellcastle Golf</h1>
+        <div class="subtitle">Bag-by-bag tournament scoring in the castle</div>
+      </div>
+      <div class="badge">
+        <div class="badge-dot"></div>
+        <span>Multiplayer Tournament</span>
+      </div>
+    </header>
+
+    <div class="layout">
+      <!-- LEFT: Players & Status -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><span>Players</span> & Tournament State</div>
+        </div>
+        <div class="panel-body">
+          <div class="status-row">
+            <div class="status-pill">
+              <div class="status-label">Hole</div>
+              <div class="status-value" id="statusHole">1 / 3</div>
+            </div>
+            <div class="status-pill">
+              <div class="status-label">Current Player</div>
+              <div class="status-value-strong" id="statusPlayer">—</div>
+            </div>
+            <div class="status-pill">
+              <div class="status-label">Bag</div>
+              <div class="status-value" id="statusBag">0 / 4</div>
+            </div>
+          </div>
+
+          <div class="players-list" id="playersList"></div>
+
+          <div class="add-player-row">
+            <input type="text" id="playerNameInput" placeholder="Add player name…" />
+            <button id="addPlayerBtn">Add</button>
+          </div>
+
+          <div class="footer-row">
+            <div>Each hole: <strong>4 bags per player</strong>. Lowest total wins.</div>
+            <button class="secondary" id="resetBtn">Reset Tournament</button>
+          </div>
+
+          <div class="winner-banner" id="winnerBanner">
+            <span class="winner-crown">👑</span>
+            <span id="winnerText"></span>
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT: Scoring & Scorecard -->
+      <section class="panel">
+        <div class="panel-header">
+          <div class="panel-title"><span>Hellcastle</span> Scoring & Scorecard</div>
+        </div>
+        <div class="panel-body">
+          <div class="score-meta-row">
+            <div>
+              Current Hole: <strong id="currentHoleLabel">Hole 1</strong> ·
+              Round <strong id="roundLabel">1</strong> of <strong id="roundTotalLabel">3</strong>
+            </div>
+            <div class="bag-counter">
+              Bags: <span id="bagCounter">0</span> / 4
+            </div>
+          </div>
+
+          <div class="score-buttons-grid">
+            <button data-score="1" class="score-btn">
+              <span class="score-label">Hole 1</span>
+              <span class="score-points">+1 pt</span>
+            </button>
+            <button data-score="3" class="score-btn">
+              <span class="score-label">Hole 2</span>
+              <span class="score-points">+3 pts</span>
+            </button>
+            <button data-score="2" class="score-btn">
+              <span class="score-label">Hole 3</span>
+              <span class="score-points">+2 pts</span>
+            </button>
+            <button data-score="4" class="score-btn">
+              <span class="score-label">On Board</span>
+              <span class="score-points">+4 pts</span>
+            </button>
+            <button data-score="5" class="score-btn" style="grid-column: span 2; background: radial-gradient(circle at top, #5b0b0b, #2b0505);">
+              <span class="score-label">Off Board</span>
+              <span class="score-points">+5 pts</span>
+            </button>
+          </div>
+
+          <div class="controls-row">
+            <button class="secondary" id="undoBtn">Undo Last Bag</button>
+            <button id="nextPlayerBtn">Next Player / Lock Hole</button>
+          </div>
+
+          <div style="margin: 10px 0 6px; font-size: 0.8rem; color: var(--muted);">
+            All players complete the <strong>same hole</strong> before advancing to the next.
+          </div>
+
+          <div class="scorecard-table-wrapper">
+            <table>
+              <thead id="scorecardHead"></thead>
+              <tbody id="scorecardBody"></tbody>
+            </table>
+          </div>
+
+          <div class="hellcastle-footer">
+            Hellcastle <span>Golf</span> · Local tournament state is saved automatically
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    // --- CONFIG ---
+    const TOTAL_HOLES = 3; // "3 rounds" = 3 holes
+    const BAGS_PER_HOLE = 4;
+    const STORAGE_KEY = "hellcastle_golf_tournament_v1";
+
+    // --- STATE ---
+    let players = []; // { id, name, scores: number[TOTAL_HOLES], total }
+    let currentHole = 0; // 0-based
+    let currentPlayerIndex = 0;
+    let currentBagCount = 0;
+    let bagHistory = []; // stack of { playerIndex, holeIndex, score }
+    let tournamentFinished = false;
+
+    // --- DOM ---
+    const playersListEl = document.getElementById("playersList");
+    const playerNameInput = document.getElementById("playerNameInput");
+    const addPlayerBtn = document.getElementById("addPlayerBtn");
+    const resetBtn = document.getElementById("resetBtn");
+    const statusHoleEl = document.getElementById("statusHole");
+    const statusPlayerEl = document.getElementById("statusPlayer");
+    const statusBagEl = document.getElementById("statusBag");
+    const currentHoleLabelEl = document.getElementById("currentHoleLabel");
+    const roundLabelEl = document.getElementById("roundLabel");
+    const roundTotalLabelEl = document.getElementById("roundTotalLabel");
+    const bagCounterEl = document.getElementById("bagCounter");
+    const scoreButtons = Array.from(document.querySelectorAll(".score-btn"));
+    const undoBtn = document.getElementById("undoBtn");
+    const nextPlayerBtn = document.getElementById("nextPlayerBtn");
+    const scorecardHeadEl = document.getElementById("scorecardHead");
+    const scorecardBodyEl = document.getElementById("scorecardBody");
+    const winnerBannerEl = document.getElementById("winnerBanner");
+    const winnerTextEl = document.getElementById("winnerText");
+    const nextHoleOverlayEl = document.getElementById("nextHoleOverlay");
+
+    // --- SOUND: simple chime for "Next Hole" ---
+    function playNextHoleSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = "triangle";
+        osc.frequency.setValueAtTime(660, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(1320, ctx.currentTime + 0.25);
+        gain.gain.setValueAtTime(0.0001, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.4, ctx.currentTime + 0.02);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.4);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.45);
+      } catch (e) {
+        // ignore if audio not allowed
+      }
+    }
+
+    function showNextHoleAnimation() {
+      nextHoleOverlayEl.classList.add("show");
+      playNextHoleSound();
+      setTimeout(() => {
+        nextHoleOverlayEl.classList.remove("show");
+      }, 900);
+    }
+
+    // --- STORAGE ---
+    function saveState() {
+      const data = {
+        players,
+        currentHole,
+        currentPlayerIndex,
+        currentBagCount,
+        bagHistory,
+        tournamentFinished
+      };
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return;
+        const data = JSON.parse(raw);
+        if (!data || !Array.isArray(data.players)) return;
+        players = data.players;
+        currentHole = data.currentHole || 0;
+        currentPlayerIndex = data.currentPlayerIndex || 0;
+        currentBagCount = data.currentBagCount || 0;
+        bagHistory = data.bagHistory || [];
+        tournamentFinished = !!data.tournamentFinished;
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    // --- HELPERS ---
+    function createPlayer(name) {
+      return {
+        id: Date.now() + Math.random().toString(16).slice(2),
+        name: name.trim(),
+        scores: Array(TOTAL_HOLES).fill(0),
+        total: 0
+      };
+    }
+
+    function recalcTotals() {
+      players.forEach(p => {
+        p.total = p.scores.reduce((a, b) => a + b, 0);
+      });
+    }
+
+    function getSortedPlayers() {
+      return [...players].sort((a, b) => a.total - b.total);
+    }
+
+    function getPlayerPositionMap() {
+      const sorted = getSortedPlayers();
+      const map = new Map();
+      sorted.forEach((p, idx) => {
+        map.set(p.id, idx + 1);
+      });
+      return map;
+    }
+
+    function formatPosition(pos) {
+      if (pos === 1) return "1st";
+      if (pos === 2) return "2nd";
+      if (pos === 3) return "3rd";
+      return pos + "th";
+    }
+
+    function updateStatus() {
+      statusHoleEl.textContent = `${currentHole + 1} / ${TOTAL_HOLES}`;
+      roundLabelEl.textContent = currentHole + 1;
+      roundTotalLabelEl.textContent = TOTAL_HOLES;
+      bagCounterEl.textContent = currentBagCount;
+      statusBagEl.textContent = `${currentBagCount} / ${BAGS_PER_HOLE}`;
+      currentHoleLabelEl.textContent = `Hole ${currentHole + 1}`;
+
+      const currentPlayer = players[currentPlayerIndex];
+      statusPlayerEl.textContent = currentPlayer ? currentPlayer.name : "—";
+
+      const canScore = players.length > 0 && !tournamentFinished;
+      scoreButtons.forEach(btn => {
+        btn.disabled = !canScore || currentBagCount >= BAGS_PER_HOLE;
+      });
+      undoBtn.disabled = !canScore || bagHistory.length === 0;
+      nextPlayerBtn.disabled = !canScore || currentBagCount < BAGS_PER_HOLE;
+
+      if (tournamentFinished) {
+        nextPlayerBtn.textContent = "Tournament Complete";
+      } else if (currentHole === TOTAL_HOLES - 1 && currentPlayerIndex === players.length - 1) {
+        nextPlayerBtn.textContent = "Finish Tournament";
+      } else if (currentPlayerIndex === players.length - 1) {
+        nextPlayerBtn.textContent = "Next Hole";
+      } else {
+        nextPlayerBtn.textContent = "Next Player / Lock Hole";
+      }
+    }
+
+    function renderPlayersList() {
+      playersListEl.innerHTML = "";
+      const posMap = getPlayerPositionMap();
+      players.forEach((p, idx) => {
+        const row = document.createElement("div");
+        row.className = "player-row" + (idx === currentPlayerIndex && !tournamentFinished ? " active" : "");
+        const nameDiv = document.createElement("div");
+        nameDiv.className = "player-name";
+        nameDiv.textContent = p.name;
+        const tag = document.createElement("span");
+        tag.textContent = idx === currentPlayerIndex ? "Current" : "Player";
+        nameDiv.appendChild(tag);
+
+        const totalDiv = document.createElement("div");
+        totalDiv.className = "player-total";
+        totalDiv.textContent = p.total;
+
+        const posDiv = document.createElement("div");
+        posDiv.className = "player-position";
+        const pos = posMap.get(p.id);
+        posDiv.textContent = pos ? formatPosition(pos) : "";
+
+        row.appendChild(nameDiv);
+        row.appendChild(totalDiv);
+        row.appendChild(posDiv);
+        playersListEl.appendChild(row);
+      });
+    }
+
+    function renderScorecard() {
+      // header
+      const headRow = document.createElement("tr");
+      const thPlayer = document.createElement("th");
+      thPlayer.textContent = "Player";
+      headRow.appendChild(thPlayer);
+      for (let h = 0; h < TOTAL_HOLES; h++) {
+        const th = document.createElement("th");
+        th.textContent = `H${h + 1}`;
+        headRow.appendChild(th);
+      }
+      const thTotal = document.createElement("th");
+      thTotal.textContent = "Total";
+      headRow.appendChild(thTotal);
+      scorecardHeadEl.innerHTML = "";
+      scorecardHeadEl.appendChild(headRow);
+
+      // body
+      scorecardBodyEl.innerHTML = "";
+      if (players.length === 0) return;
+
+      const sorted = getSortedPlayers();
+      const bestTotal = sorted[0].total;
+
+      players.forEach(p => {
+        const tr = document.createElement("tr");
+        if (tournamentFinished && p.total === bestTotal) {
+          tr.classList.add("highlight");
+        }
+
+        const tdName = document.createElement("td");
+        tdName.className = "player-cell";
+        tdName.textContent = p.name;
+        tr.appendChild(tdName);
+
+        for (let h = 0; h < TOTAL_HOLES; h++) {
+          const td = document.createElement("td");
+          td.textContent = p.scores[h] || 0;
+          tr.appendChild(td);
+        }
+
+        const tdTotal = document.createElement("td");
+        tdTotal.className = "total-cell";
+        tdTotal.textContent = p.total;
+        tr.appendChild(tdTotal);
+
+        scorecardBodyEl.appendChild(tr);
+      });
+    }
+
+    function updateWinnerBanner() {
+      if (!tournamentFinished || players.length === 0) {
+        winnerBannerEl.classList.remove("show");
+        winnerTextEl.textContent = "";
+        return;
+      }
+      const sorted = getSortedPlayers();
+      const bestTotal = sorted[0].total;
+      const winners = sorted.filter(p => p.total === bestTotal).map(p => p.name);
+      const names = winners.join(", ");
+      winnerTextEl.textContent = `Hellcastle Champion: ${names} (${bestTotal} pts)`;
+      winnerBannerEl.classList.add("show");
+    }
+
+    function renderAll() {
+      recalcTotals();
+      updateStatus();
+      renderPlayersList();
+      renderScorecard();
+      updateWinnerBanner();
+      saveState();
+    }
+
+    // --- GAME FLOW ---
+    function addScore(points) {
+      if (tournamentFinished || players.length === 0) return;
+      if (currentBagCount >= BAGS_PER_HOLE) return;
+
+      const player = players[currentPlayerIndex];
+      player.scores[currentHole] += points;
+      currentBagCount++;
+      bagHistory.push({
+        playerIndex: currentPlayerIndex,
+        holeIndex: currentHole,
+        score: points
+      });
+
+      renderAll();
+    }
+
+    function undoLastBag() {
+      if (bagHistory.length === 0 || tournamentFinished) return;
+      const last = bagHistory.pop();
+      const player = players[last.playerIndex];
+      player.scores[last.holeIndex] -= last.score;
+      if (player.scores[last.holeIndex] < 0) player.scores[last.holeIndex] = 0;
+      currentBagCount = Math.max(0, currentBagCount - 1);
+      renderAll();
+    }
+
+    function advancePlayerOrHole() {
+      if (tournamentFinished || players.length === 0) return;
+      if (currentBagCount < BAGS_PER_HOLE) return;
+
+      currentBagCount = 0;
+
+      if (currentPlayerIndex < players.length - 1) {
+        // next player, same hole
+        currentPlayerIndex++;
+      } else {
+        // all players finished this hole
+        if (currentHole < TOTAL_HOLES - 1) {
+          currentHole++;
+          currentPlayerIndex = 0;
+          showNextHoleAnimation();
+        } else {
+          // tournament finished
+          tournamentFinished = true;
+        }
+      }
+
+      renderAll();
+    }
+
+    function resetTournament() {
+      if (!confirm("Reset Hellcastle Golf tournament and clear all scores?")) return;
+      players = [];
+      currentHole = 0;
+      currentPlayerIndex = 0;
+      currentBagCount = 0;
+      bagHistory = [];
+      tournamentFinished = false;
+      localStorage.removeItem(STORAGE_KEY);
+      renderAll();
+    }
+
+    function addPlayerFromInput() {
+      const name = playerNameInput.value.trim();
+      if (!name) return;
+      players.push(createPlayer(name));
+      playerNameInput.value = "";
+      if (players.length === 1) {
+        currentPlayerIndex = 0;
+      }
+      renderAll();
+    }
+
+    // --- EVENT LISTENERS ---
+    addPlayerBtn.addEventListener("click", addPlayerFromInput);
+    playerNameInput.addEventListener("keydown", e => {
+      if (e.key === "Enter") {
+        addPlayerFromInput();
+      }
+    });
+
+    scoreButtons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        const score = parseInt(btn.getAttribute("data-score"), 10);
+        addScore(score);
+      });
+    });
+
+    undoBtn.addEventListener("click", undoLastBag);
+    nextPlayerBtn.addEventListener("click", advancePlayerOrHole);
+    resetBtn.addEventListener("click", resetTournament);
+
+    // --- INIT ---
+    loadState();
+    renderAll();
+  </script>
+</body>
+</html>
