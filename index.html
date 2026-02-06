@@ -535,6 +535,131 @@
     .hellcastle-footer span {
       color: var(--accent);
     }
+    /* --- MOBILE OPTIMIZATION --- */
+@media (max-width: 600px) {
+
+  body {
+    padding: 10px;
+    align-items: stretch;
+  }
+
+  .app {
+    padding: 14px 14px 20px;
+    border-radius: 12px;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  h1 {
+    font-size: 1.4rem;
+    letter-spacing: 0.08em;
+  }
+
+  .subtitle {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .badge {
+    align-self: flex-start;
+    padding: 4px 10px;
+    font-size: 0.65rem;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .panel {
+    padding: 10px 10px 14px;
+  }
+
+  .panel-title {
+    font-size: 0.75rem;
+    letter-spacing: 0.12em;
+  }
+
+  .status-row {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .status-pill {
+    padding: 4px 8px;
+    font-size: 0.7rem;
+  }
+
+  .players-list {
+    max-height: 180px;
+  }
+
+  .player-row {
+    grid-template-columns: 1.2fr 0.7fr 0.7fr;
+    padding: 5px 6px;
+    font-size: 0.78rem;
+  }
+
+  input[type="text"] {
+    padding: 6px 8px;
+    font-size: 0.78rem;
+  }
+
+  button {
+    padding: 6px 10px;
+    font-size: 0.72rem;
+    letter-spacing: 0.12em;
+  }
+
+  .score-buttons-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .score-buttons-grid button {
+    padding: 10px;
+  }
+
+  .controls-row {
+    gap: 6px;
+  }
+
+  .controls-row button {
+    min-width: 100px;
+    flex: 1;
+  }
+
+  .score-meta-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 0.75rem;
+  }
+
+  table th,
+  table td {
+    padding: 5px 6px;
+    font-size: 0.72rem;
+  }
+
+  .scorecard-table-wrapper {
+    max-height: 200px;
+  }
+
+  .winner-banner {
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+
+  .hellcastle-footer {
+    font-size: 0.6rem;
+    margin-top: 8px;
+  }
+}
   </style>
 </head>
 <body>
