@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Game History - Hellcastle Golf</title>
+  <style>
+    :root {
+      --bg: #051d0d;
+      --panel: rgba(10, 45, 20, 0.85);
+      --accent: #39ff14;
+      --accent-soft: #8dff7a;
+      --accent2: #f7b733;
+      --text: #eaffea;
+      --muted: #7fbf7f;
+      --winner: #7dffb2;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top, #0a2e16 0, #031408 55%, #000 100%);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    button {
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      background: radial-gradient(circle at top, rgba(255, 75, 31, 0.9), rgba(255, 75, 31, 0.6));
+      color: #fff;
+      padding: 8px 14px;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    button.secondary {
+      background: rgba(0, 0, 0, 0.7);
+      border-color: rgba(255, 255, 255, 0.18);
+      color: var(--muted);
+    }
+
+    button:hover:not(:disabled) {
+      opacity: 0.8;
+    }
+
+    button:disabled {
+      opacity: 0.4;
+      cursor: default;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: radial-gradient(circle at top left, rgba(57, 255, 20, 0.15), rgba(0, 0, 0, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+    }
+
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      color: var(--muted);
+      letter-spacing: 0.14em;
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-size: 2rem;
+      color: var(--accent2);
+      font-weight: bold;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section-title {
+      font-size: 1.2rem;
+      color: var(--accent2);
+      margin-bottom: 15px;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    }
+
+    .games-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 15px;
+    }
+
+    .game-card {
+      background: radial-gradient(circle at top left, rgba(57, 255, 20, 0.15), rgba(0, 0, 0, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .game-card:hover {
+      border-color: rgba(57, 255, 20, 0.3);
+      box-shadow: 0 0 20px rgba(57, 255, 20, 0.1);
+    }
+
+    .game-date {
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .game-course {
+      display: inline-block;
+      background: rgba(247, 183, 51, 0.2);
+      color: var(--accent2);
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+
+    .game-winner {
+      font-size: 1.1rem;
+      color: var(--winner);
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .game-score {
+      font-size: 0.85rem;
+      color: var(--text);
+    }
+
+    .players-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      gap: 15px;
+    }
+
+    .player-card {
+      background: radial-gradient(circle at top left, rgba(57, 255, 20, 0.15), rgba(0, 0, 0, 0.8));
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 14px;
+      padding: 16px;
+    }
+
+    .player-name {
+      font-size: 1rem;
+      color: var(--accent2);
+      margin-bottom: 12px;
+      font-weight: bold;
+    }
+
+    .player-stat {
+      display: flex;
+      justify-content: space-between;
+      padding: 6px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      font-size: 0.85rem;
+    }
+
+    .player-stat label {
+      color: var(--muted);
+    }
+
+    .player-stat value {
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: linear-gradient(145deg, #082411, #020a05);
+      border-radius: 16px;
+      border: 1px solid rgba(57, 255, 20, 0.3);
+      padding: 30px;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      width: 100%;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid rgba(57, 255, 20, 0.2);
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      color: var(--accent2);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      color: var(--muted);
+      font-size: 1.5rem;
+      cursor: pointer;
+      padding: 0;
+    }
+
+    .close-btn:hover {
+      color: var(--accent);
+    }
+
+    .scorecard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.85rem;
+    }
+
+    .scorecard-table th,
+    .scorecard-table td {
+      padding: 8px;
+      text-align: center;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .scorecard-table th {
+      background: rgba(57, 255, 20, 0.1);
+      color: var(--muted);
+      text-transform: uppercase;
+      font-size: 0.75rem;
+    }
+
+    .scorecard-table td:first-child,
+    .scorecard-table th:first-child {
+      text-align: left;
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state-icon {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      .header-buttons {
+        flex-direction: column;
+        width: 100%;
+      }
+
+      .header-buttons button {
+        width: 100%;
+      }
+
+      .games-list,
+      .players-grid,
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .modal-content {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>📊 Game History</h1>
+      <div class="header-buttons">
+        <a href="index.html" target="_blank"><button class="secondary">← Back to Game</button></a>
+        <button class="secondary" id="refreshBtn">🔄 Refresh</button>
+        <button class="secondary" id="exportBtn">💾 Export</button>
+        <button class="secondary" id="clearBtn">🗑️ Clear All</button>
+      </div>
+    </header>
+
+    <div class="stats-grid" id="statsGrid"></div>
+
+    <div class="section">
+      <h2 class="section-title">Recent Games</h2>
+      <div id="gamesContainer" class="games-list"></div>
+    </div>
+
+    <div class="section">
+      <h2 class="section-title">Player Statistics</h2>
+      <div id="playersContainer" class="players-grid"></div>
+    </div>
+  </div>
+
+  <div class="modal" id="gameModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <div class="modal-title" id="modalTitle">Game Details</div>
+        <button class="close-btn" onclick="document.getElementById('gameModal').classList.remove('show')">&times;</button>
+      </div>
+      <table class="scorecard-table" id="modalScorecard"></table>
+    </div>
+  </div>
+
+  <script src="db.js"></script>
+  <script>
+    // Initialize and load data
+    async function loadHistory() {
+      try {
+        // Load stats
+        const stats = await golfDB.getStatisticsSummary();
+        displayStats(stats);
+
+        // Load recent games
+        const games = await golfDB.getAllGames();
+        displayGames(games);
+
+        // Load player stats
+        const playerNames = await golfDB.getAllPlayerNames();
+        displayPlayerStats(playerNames);
+      } catch (err) {
+        console.error('Failed to load history:', err);
+      }
+    }
+
+    function displayStats(stats) {
+      const statsHtml = `
+        <div class="stat-card">
+          <div class="stat-label">Total Games</div>
+          <div class="stat-value">${stats.totalGames}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Unique Players</div>
+          <div class="stat-value">${stats.uniquePlayers}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">3-Hole Games</div>
+          <div class="stat-value">${stats.gamesBy3Holes}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">9-Hole Games</div>
+          <div class="stat-value">${stats.gamesBy9Holes}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Best Score</div>
+          <div class="stat-value">${stats.bestScore}</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Worst Score</div>
+          <div class="stat-value">${stats.worstScore}</div>
+        </div>
+      `;
+      document.getElementById('statsGrid').innerHTML = statsHtml;
+    }
+
+    function displayGames(games) {
+      if (games.length === 0) {
+        document.getElementById('gamesContainer').innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-state-icon">📭</div>
+            <p>No games played yet. Start playing to see your history!</p>
+          </div>
+        `;
+        return;
+      }
+
+      const html = games.map((game, idx) => `
+        <div class="game-card" onclick="showGameDetails(${game.id})">
+          <div class="game-date">${game.date}</div>
+          <div class="game-course">${game.courseLength} Holes</div>
+          <div class="game-winner">🏆 ${game.winner.name}</div>
+          <div class="game-score">${game.playerCount} players • Score: ${game.winner.total}</div>
+        </div>
+      `).join('');
+      
+      document.getElementById('gamesContainer').innerHTML = html;
+    }
+
+    async function displayPlayerStats(playerNames) {
+      if (playerNames.length === 0) {
+        document.getElementById('playersContainer').innerHTML = `
+          <div class="empty-state" style="grid-column: 1 / -1;">
+            <div class="empty-state-icon">👥</div>
+            <p>No player statistics yet.</p>
+          </div>
+        `;
+        return;
+      }
+
+      const playerStats = await Promise.all(playerNames.map(name => golfDB.getPlayerStats(name)));
+
+      const html = playerStats.map(stats => `
+        <div class="player-card" onclick="showPlayerDetails('${stats.name}')">
+          <div class="player-name">${stats.name}</div>
+          <div class="player-stat">
+            <label>Games Played</label>
+            <value>${stats.gamesPlayed}</value>
+          </div>
+          <div class="player-stat">
+            <label>Best Score</label>
+            <value>${stats.bestScore}</value>
+          </div>
+          <div class="player-stat">
+            <label>Worst Score</label>
+            <value>${stats.worstScore}</value>
+          </div>
+          <div class="player-stat">
+            <label>Average Score</label>
+            <value>${stats.averageScore}</value>
+          </div>
+        </div>
+      `).join('');
+
+      document.getElementById('playersContainer').innerHTML = html;
+    }
+
+    async function showGameDetails(gameId) {
+      const game = await golfDB.getGameById(gameId);
+      if (!game) return;
+
+      const modalTitle = document.getElementById('modalTitle');
+      const scoreTable = document.getElementById('modalScorecard');
+
+      modalTitle.textContent = `Game on ${game.date} (${game.courseLength} Holes)`;
+
+      let headerRow = '<tr><th>Player</th>';
+      for (let i = 1; i <= game.courseLength; i++) {
+        headerRow += `<th>H${i}</th>`;
+      }
+      headerRow += '<th>Total</th></tr>';
+
+      const bodyRows = game.scores.map(score => {
+        const scoreValues = score.scores.map(s => `<td>${s}</td>`).join('');
+        return `<tr><td>${score.name}</td>${scoreValues}<td style="font-weight:bold; color:var(--accent2)">${score.total}</td></tr>`;
+      }).join('');
+
+      scoreTable.innerHTML = headerRow + bodyRows;
+      document.getElementById('gameModal').classList.add('show');
+    }
+
+    async function showPlayerDetails(playerName) {
+      const stats = await golfDB.getPlayerStats(playerName);
+      if (!stats) return;
+
+      const modalTitle = document.getElementById('modalTitle');
+      const scoreTable = document.getElementById('modalScorecard');
+
+      modalTitle.textContent = `${playerName} - Overall Stats`;
+
+      const statsHtml = `
+        <tr><td style="text-align:left">Games Played</td><td>${stats.gamesPlayed}</td></tr>
+        <tr><td style="text-align:left">Best Score</td><td style="color:var(--winner)">${stats.bestScore}</td></tr>
+        <tr><td style="text-align:left">Worst Score</td><td>${stats.worstScore}</td></tr>
+        <tr><td style="text-align:left">Average Score</td><td>${stats.averageScore}</td></tr>
+        <tr><td style="text-align:left">3-Hole Games</td><td>${stats.by3Holes.games}</td></tr>
+        <tr><td style="text-align:left">9-Hole Games</td><td>${stats.by9Holes.games}</td></tr>
+      `;
+
+      scoreTable.innerHTML = statsHtml;
+      document.getElementById('gameModal').classList.add('show');
+    }
+
+    // Event listeners
+    document.getElementById('refreshBtn').addEventListener('click', loadHistory);
+
+    document.getElementById('exportBtn').addEventListener('click', () => {
+      golfDB.exportGamesAsJSON();
+    });
+
+    document.getElementById('clearBtn').addEventListener('click', async () => {
+      if (confirm('Are you sure you want to delete ALL game history? This cannot be undone!')) {
+        await golfDB.clearAllData();
+        loadHistory();
+      }
+    });
+
+    // Initial load
+    loadHistory();
+  </script>
+</body>
+</html>
