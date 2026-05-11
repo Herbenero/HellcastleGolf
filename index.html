@@ -267,10 +267,42 @@
       font-size: 0.9rem;
     }
 
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .title-block h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      color: var(--accent);
+      text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
+    }
+
+    .subtitle {
+      font-size: 0.8rem;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+    }
+
+    .header-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .header-buttons button {
+      padding: 6px 10px;
+      font-size: 0.7rem;
+    }
+
     @media (max-width: 600px) {
         .app { padding: 15px; }
         h1 { font-size: 1.4rem; }
         .scorecard-table-wrapper { max-height: 200px; }
+        header { flex-direction: column; gap: 10px; }
     }
   </style>
 </head>
@@ -284,6 +316,9 @@
       <div class="title-block">
         <h1>Hellcastle Golf</h1>
         <div class="subtitle">Tournament scoring</div>
+      </div>
+      <div class="header-buttons">
+        <a href="history.html" target="_blank"><button class="secondary">📊 History</button></a>
       </div>
     </header>
 
@@ -362,11 +397,13 @@
     </div>
   </div>
 
+  <script src="db.js"></script>
   <script>
     // --- STATE ---
     let totalHoles = 3; 
     const BAGS_PER_HOLE = 4;
     const STORAGE_KEY = "hellcastle_golf_v2";
+    const GAME_START_TIME = Date.now();
 
     let players = []; 
     let currentHole = 0; 
@@ -483,6 +520,24 @@
       saveState();
     }
 
+    // Save game to database when tournament finishes
+    async function saveGameToDatabase() {
+      if (!golfDB || players.length === 0) return;
+
+      try {
+        const gameData = {
+          totalHoles,
+          players,
+          winner: [...players].sort((a, b) => a.total - b.total)[0],
+          duration: Math.floor((Date.now() - GAME_START_TIME) / 1000)
+        };
+        await golfDB.saveGame(gameData);
+        console.log('Game saved to database');
+      } catch (err) {
+        console.error('Failed to save game:', err);
+      }
+    }
+
     // --- EVENTS ---
     holeOpts.forEach(opt => {
         opt.addEventListener("click", () => {
@@ -528,6 +583,7 @@
         setTimeout(() => nextHoleOverlayEl.classList.remove("show"), 900);
       } else {
         tournamentFinished = true;
+        saveGameToDatabase();
       }
       renderAll();
     });
