@@ -182,21 +182,24 @@
 
     button {
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: radial-gradient(circle at top, rgba(255, 75, 31, 0.9), rgba(255, 75, 31, 0.6));
-      color: #fff;
+      border: 2px solid #b33000;
+      background: #ff4a1a;
+      color: #000000;
+      font-weight: 700;
       padding: 7px 12px;
       font-size: 0.8rem;
       text-transform: uppercase;
       letter-spacing: 0.14em;
       cursor: pointer;
       white-space: nowrap;
+      text-shadow: none;
     }
 
     button.secondary {
-      background: rgba(0, 0, 0, 0.7);
-      border-color: rgba(255, 255, 255, 0.18);
-      color: var(--muted);
+      background: #e0e0e0;
+      border: 2px solid #888888;
+      color: #000000;
+      font-weight: 700;
     }
 
     button:disabled { opacity: 0.4; cursor: default; }
@@ -307,6 +310,26 @@
   </style>
 </head>
 <body>
+
+<div id="holeSelector" style="margin:10px 0;text-align:center;">
+<label for="holeCount"><strong>Round Length:</strong></label>
+<select id="holeCount">
+  <option value="3">3 Holes</option>
+  <option value="9">9 Holes</option>
+  <option value="18">18 Holes</option>
+</select>
+</div>
+<script>
+window.TOTAL_HOLES = 3;
+document.addEventListener('DOMContentLoaded',()=>{
+ const s=document.getElementById('holeCount');
+ if(s){
+   window.TOTAL_HOLES=parseInt(s.value,10);
+   s.addEventListener('change',()=>window.TOTAL_HOLES=parseInt(s.value,10));
+ }
+});
+</script>
+
   <div class="app" id="app">
     <div class="next-hole-overlay" id="nextHoleOverlay">
       <div class="next-hole-banner">Next Hole Awaits</div>
@@ -331,7 +354,7 @@
         <div class="status-label" style="margin-bottom:5px">Course Length</div>
         <div class="hole-selector" id="holeSelector">
             <div class="hole-opt active" data-holes="3">3 Holes</div>
-            <div class="hole-opt" data-holes="9">9 Holes</div>
+            <div class="hole-opt" data-holes="9">window.TOTAL_HOLES Holes</div>
         </div>
 
         <div class="panel-body">
@@ -378,7 +401,7 @@
             <button data-score="3" class="score-btn">Middle (+3)</button>
             <button data-score="2" class="score-btn">Top (+2)</button>
             <button data-score="4" class="score-btn">On Board (+4)</button>
-            <button data-score="5" class="score-btn" style="grid-column: span 2; background: #5b0b0b;">Off Board (+5)</button>
+            <button data-score="5" class="score-btn" style="grid-column: span 2; background: #cc0000; color: #ffffff; border-color: #880000; font-weight: 900;">Off Board (+5)</button>
           </div>
 
           <div style="display:flex; gap:8px">
