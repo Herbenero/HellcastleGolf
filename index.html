@@ -19,7 +19,6 @@
     body {
       margin: 0;
       min-height: 100vh;
-      /* Changed from reddish-black to deep green-black gradient */
       background: #ffffff;
       color: var(--text);
       display: flex;
@@ -31,34 +30,31 @@
     .app {
       width: 100%;
       max-width: 1100px;
-      /* Swapped linear black gradient for deep green */
       background: #ffffff;
       border-radius: 16px;
       border: 2px solid #cccccc;
-      box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
       padding: 20px 24px 28px;
       position: relative;
       overflow: hidden;
     }
 
-    /* Ambient glow effects updated to green */
     .app::before {
       content: "";
       position: absolute;
       inset: -40%;
       background:
-        radial-gradient(circle at 10% 0, rgba(57, 255, 20, 0.08), transparent 55%),
-        radial-gradient(circle at 90% 100%, rgba(141, 255, 122, 0.08), transparent 55%);
+        radial-gradient(circle at 10% 0, rgba(57, 255, 20, 0.04), transparent 55%),
+        radial-gradient(circle at 90% 100%, rgba(141, 255, 122, 0.04), transparent 55%);
       opacity: 0.9;
       pointer-events: none;
       z-index: -1;
     }
 
     .panel {
-      /* Panels now use a green-tinted radial gradient */
       background: #fafafa;
       border-radius: 14px;
-      border: 1px solid rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(0,0,0,0.06);
       padding: 14px 14px 16px;
       position: relative;
     }
@@ -89,12 +85,13 @@
     .status-pill {
       padding: 6px 10px;
       border-radius: 999px;
-      background: rgba(0, 0, 0, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #ffffff;
+      border: 1px solid #e0e0e0;
       font-size: 0.8rem;
       display: inline-flex;
       align-items: center;
       gap: 6px;
+      color: var(--muted);
     }
 
     .status-label {
@@ -107,17 +104,19 @@
     .status-value { color: var(--accent2); font-weight: 600; }
     .status-value-strong { color: var(--accent); font-weight: 700; }
 
-    .hole-selector {
-      display: flex;
-      gap: 5px;
-      background: rgba(0,0,0,0.4);
-      padding: 4px;
+    /* Round length selector (moved into course panel) */
+    #holeCount {
+      padding: 6px 8px;
       border-radius: 999px;
-      margin-bottom: 15px;
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      border: 1px solid #9e9e9e;
+      background: #ffffff;
+      color: var(--text);
+      font-size: 0.85rem;
+      margin-left: 8px;
     }
 
     .hole-opt {
+      /* kept for backward compatibility if present, but not used when select is used */
       flex: 1;
       padding: 6px;
       text-align: center;
@@ -155,14 +154,15 @@
       align-items: center;
       padding: 6px 8px;
       border-radius: 8px;
-      background: rgba(0, 0, 0, 0.55);
-      border: 1px solid transparent;
+      background: #ffffff;
+      border: 1px solid #e6e6e6;
       font-size: 0.85rem;
+      color: var(--text);
     }
 
     .player-row.active {
-      border-color: rgba(255, 75, 31, 0.9);
-      background: radial-gradient(circle at left, rgba(255, 75, 31, 0.35), rgba(0, 0, 0, 0.9));
+      border-color: rgba(255, 152, 0, 0.9);
+      background: linear-gradient(90deg, rgba(255,243,224,0.9), #ffffff);
     }
 
     .player-total { text-align: right; color: var(--accent2); font-weight: 600; }
@@ -174,16 +174,16 @@
       flex: 1;
       padding: 7px 9px;
       border-radius: 999px;
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid #cccccc;
+      background: #ffffff;
       color: var(--text);
       font-size: 0.85rem;
     }
 
     button {
       border-radius: 999px;
-      border: 2px solid #b33000;
-      background: #ff4a1a;
+      border: 2px solid #b8860b;
+      background: #ffd54f;
       color: #000000;
       font-weight: 700;
       padding: 7px 12px;
@@ -196,13 +196,13 @@
     }
 
     button.secondary {
-      background: #e0e0e0;
-      border: 2px solid #888888;
+      background: #f0f0f0;
+      border: 2px solid #bdbdbd;
       color: #000000;
       font-weight: 700;
     }
 
-    button:disabled { opacity: 0.4; cursor: default; }
+    button:disabled { opacity: 0.6; cursor: default; }
 
     .score-buttons-grid {
       display: grid;
@@ -224,26 +224,26 @@
       max-height: 260px;
       overflow: auto;
       border-radius: 10px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(0, 0, 0, 0.7);
+      border: 1px solid #e6e6e6;
+      background: #ffffff;
       margin-top: 10px;
     }
 
     table { width: 100%; border-collapse: collapse; font-size: 0.75rem; }
-    th, td { padding: 6px 8px; text-align: center; border-bottom: 1px solid rgba(255, 255, 255, 0.04); }
+    th, td { padding: 6px 8px; text-align: center; border-bottom: 1px solid #f0f0f0; }
     th { text-transform: uppercase; color: var(--muted); font-size: 0.65rem; }
     
     .winner-banner {
       margin-top: 8px;
       padding: 8px 10px;
       border-radius: 999px;
-      background: #00ff3c;
+      background: #fff59d;
       font-size: 0.8rem;
       display: none;
       align-items: center;
       gap: 8px;
       color: #000;
-      box-shadow: 0 0 18px #00ff3c;
+      box-shadow: 0 0 18px rgba(255,235,59,0.6);
     }
 
     .winner-banner.show { display: inline-flex; }
@@ -263,9 +263,9 @@
     .next-hole-banner {
       padding: 18px 26px;
       border-radius: 999px;
-      background: radial-gradient(circle at top, rgba(255, 75, 31, 0.95), rgba(0, 0, 0, 0.95));
+      background: radial-gradient(circle at top, rgba(255,193,7,0.95), rgba(255,152,0,0.95));
       border: 2px solid var(--accent2);
-      color: #fff;
+      color: #000;
       text-transform: uppercase;
       font-size: 0.9rem;
     }
@@ -281,7 +281,6 @@
       margin: 0;
       font-size: 1.8rem;
       color: var(--accent);
-      text-shadow: 0 0 20px rgba(57, 255, 20, 0.4);
     }
 
     .subtitle {
@@ -311,25 +310,6 @@
 </head>
 <body>
 
-<div id="holeSelector" style="margin:10px 0;text-align:center;">
-<label for="holeCount"><strong>Round Length:</strong></label>
-<select id="holeCount">
-  <option value="3">3 Holes</option>
-  <option value="9">9 Holes</option>
-  <option value="18">18 Holes</option>
-</select>
-</div>
-<script>
-window.TOTAL_HOLES = 3;
-document.addEventListener('DOMContentLoaded',()=>{
- const s=document.getElementById('holeCount');
- if(s){
-   window.TOTAL_HOLES=parseInt(s.value,10);
-   s.addEventListener('change',()=>window.TOTAL_HOLES=parseInt(s.value,10));
- }
-});
-</script>
-
   <div class="app" id="app">
     <div class="next-hole-overlay" id="nextHoleOverlay">
       <div class="next-hole-banner">Next Hole Awaits</div>
@@ -352,9 +332,13 @@ document.addEventListener('DOMContentLoaded',()=>{
         </div>
         
         <div class="status-label" style="margin-bottom:5px">Course Length</div>
-        <div class="hole-selector" id="holeSelector">
-            <div class="hole-opt active" data-holes="3">3 Holes</div>
-            <div class="hole-opt" data-holes="9">window.TOTAL_HOLES Holes</div>
+        <div style="margin-bottom:10px;">
+          <label for="holeCount"><strong>Round Length:</strong></label>
+          <select id="holeCount">
+            <option value="3">3 Holes</option>
+            <option value="9">9 Holes</option>
+            <option value="18">18 Holes</option>
+          </select>
         </div>
 
         <div class="panel-body">
@@ -401,7 +385,7 @@ document.addEventListener('DOMContentLoaded',()=>{
             <button data-score="3" class="score-btn">Middle (+3)</button>
             <button data-score="2" class="score-btn">Top (+2)</button>
             <button data-score="4" class="score-btn">On Board (+4)</button>
-            <button data-score="5" class="score-btn" style="grid-column: span 2; background: #cc0000; color: #ffffff; border-color: #880000; font-weight: 900;">Off Board (+5)</button>
+            <button data-score="5" class="score-btn" style="grid-column: span 2; background: #ff8a80; color: #000000; border-color: #ff5252; font-weight: 900;">Off Board (+5)</button>
           </div>
 
           <div style="display:flex; gap:8px">
@@ -452,7 +436,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     const winnerBannerEl = document.getElementById("winnerBanner");
     const winnerTextEl = document.getElementById("winnerText");
     const nextHoleOverlayEl = document.getElementById("nextHoleOverlay");
-    const holeOpts = document.querySelectorAll(".hole-opt");
+    const holeCountSelect = document.getElementById('holeCount');
 
     // --- LOGIC ---
     function saveState() {
@@ -475,10 +459,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     function updateHoleSelectorUI() {
-        holeOpts.forEach(opt => {
-            opt.classList.toggle("active", parseInt(opt.dataset.holes) === totalHoles);
-            opt.classList.toggle("disabled", players.length > 0);
-        });
+        if (holeCountSelect) {
+          holeCountSelect.value = String(totalHoles);
+          holeCountSelect.disabled = players.length > 0;
+        }
     }
 
     function createPlayer(name) {
@@ -562,13 +546,13 @@ document.addEventListener('DOMContentLoaded',()=>{
     }
 
     // --- EVENTS ---
-    holeOpts.forEach(opt => {
-        opt.addEventListener("click", () => {
-            if (players.length > 0) return;
-            totalHoles = parseInt(opt.dataset.holes);
-            renderAll();
-        });
-    });
+    if (holeCountSelect) {
+      holeCountSelect.addEventListener('change', () => {
+        if (players.length > 0) return;
+        totalHoles = parseInt(holeCountSelect.value, 10);
+        renderAll();
+      });
+    }
 
     addPlayerBtn.addEventListener("click", () => {
       const name = playerNameInput.value.trim();
